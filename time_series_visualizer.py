@@ -10,7 +10,7 @@ register_matplotlib_converters()
 df = pd.read_csv('./fcc-forum-pageviews.csv', index_col='date')
 
 # Clean data
-print(df['value'].quantile(0.800), df['value'].quantile(0.025))
+
 df = df[(df['value'] < df['value'].quantile(0.975)) & (df['value'] > df['value'].quantile(0.025))]
 
 ###month dict
@@ -26,6 +26,7 @@ month_dict = {1: 'January',
               10: 'October',
               11: 'November',
               12: 'December'}
+
 month_names = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
                'November', 'December']
 
@@ -56,8 +57,6 @@ def draw_bar_plot():
     df_bar = df_bar[['month', 'year', 'value']]
     df_bar = df_bar.groupby(['year', 'month'])['value'].sum().reset_index()
 
-    # df_bar['month'] = df_bar['month'].apply(lambda x : month_dict[x])
-    print(df_bar.head())
     # Draw bar plot
     plt.subplots(figsize=(8, 8))
     pal = sns.color_palette("Paired")
@@ -83,7 +82,7 @@ def draw_box_plot():
     df_box = df.copy()
 
     df_box.reset_index(inplace=True)
-    df_box['date']=pd.to_datetime(df_box['date'])
+    df_box['date'] = pd.to_datetime(df_box['date'])
     df_box['year'] = [d.year for d in df_box.date]
     df_box['month'] = [d.strftime('%b') for d in df_box.date]
 
@@ -107,7 +106,7 @@ def draw_box_plot():
                 data=df_box,
                 ax=ax[1],
                 order=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-               )  # Adjust palette for month-wise plot
+                )
     ax[1].set_ylabel("Page Views", size=14)
     ax[1].set_xlabel("Month", size=14)
     ax[1].set_title("Month-Wise Box Plot (Seasonality)", size=18)
